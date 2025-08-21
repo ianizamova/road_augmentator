@@ -1,0 +1,51 @@
+{
+    "object_sources": {
+        "directories": [
+            "data/objects/extracted",
+            "data/objects/generated"
+        ],
+        "files": [
+            "data/custom_objects/special_bicycle.png"
+        ]
+    },
+    "background_sources": {
+        "directories": [
+            "data/backgrounds/road_scenes",
+            "data/backgrounds/urban"
+        ],
+        "files": [
+            "data/backgrounds/special_scene.jpg"
+        ]
+    },
+    "object_extractor": {
+        "enabled": true,
+        "config_path": "configs/object_extractor_config.json"
+    },
+    "rider_extractor": {
+        "enabled": true,
+        "config_path": "configs/rider_extractor_config.json"
+    },
+    "generator": {
+        "enabled": true,
+        "config_path": "configs/generator_config.json",
+        "prompts": [
+            "A blue bicycle on white background",
+            "A red motorcycle isolated on white background",
+            "A person riding a bicycle on white background",
+            "A deer isolated on white background", 
+            "A moose isolated on white background"
+        ]
+    },
+    "position_predictor": {
+        "config_path": "configs/position_predictor_config.json"
+    },
+    "inserter": {
+        "config_path": "configs/inserter_config.json"
+    },
+    "enhancer": {
+        "config_path": "configs/enhancer_config.json"
+    },
+    "output_directory": "results/augmented_images",
+    "max_objects_per_background": 5,
+    "min_object_confidence": 0.6
+}

@@ -1,0 +1,8 @@
+{
+    "blending_mode": "poisson",
+    "shadow_intensity": 0.4,
+    "reflection_strength": 0.2,
+    "lighting_match": true,
+    "perspective_adjustment": true,
+    "scale_variation": 0.15
+}

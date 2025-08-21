@@ -1,0 +1,10 @@
+{
+    "dataset_path": "/media/irina/ADATA HD330/data/datasets/coco",
+    "annotation_file": "annotations/instances_train2017.json",
+    "output_dir": "extracted_objects_bp",
+    "target_classes": ["bicycle", "person"],
+    "image_folder": "train2017",
+    "save_format": "png",
+    "crop_to_bbox": true,
+    "preserve_aspect_ratio": false
+}

@@ -1,0 +1,23 @@
+{
+    "model_name": "runwayml/stable-diffusion-v1-5",
+    "segmentation_model": "nvidia/segformer-b0-finetuned-ade-512-512",
+    "output_dir": "generated_objects",
+    "configs_dir": "configs",
+    "default_prompt": "A bicycle isolated on white background, high detail, 4k",
+    "default_negative_prompt": "low quality, blurry, text, watermark, people, multiple objects",
+    "width": 512,
+    "height": 512,
+    "num_inference_steps": 30,
+    "guidance_scale": 7.5,
+    "seed": null,
+    "save_original": true,
+    "save_segmented": true,
+    "target_classes": [
+        "bicycle",
+        "motorcycle",
+        "car"
+    ],
+    "confidence_threshold": 0.5,
+    "use_fast_processor": true,
+    "enable_safety_checker": true
+}
