@@ -8,7 +8,7 @@ class ObjectInserter:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-    def insert_object(self, background_path, object_path, x, y, enhance=True):
+    def insert_object(self, background_path, object_path, position, depth, enhance=True):
         """
         Вставляет объект на фон с улучшением качества
         
@@ -30,24 +30,38 @@ class ObjectInserter:
         # Конвертация в RGB для работы с PIL
         bg = cv2.cvtColor(bg, cv2.COLOR_BGR2RGB)
         
+        # it is need to resize object and then use only resized one
+        h_ins = position['height']
+        ar = h_ins/obj.shape[1]
+        w_ins = int(obj.shape[0] * ar)
+        
+        obj_resized = cv2.resize(obj, dsize=(w_ins, h_ins), interpolation=cv2.INTER_CUBIC)
+        
         # Базовое наложение объекта
-        result = self._basic_blend(bg, obj, x, y)
+        result = self._basic_blend(bg, obj_resized, position['x'], position['y'])
         
         # Улучшение интеграции
         if enhance:
-            result = self._enhance_integration(result, obj, x, y)
-            
-        return cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+            result = self._enhance_integration(result, obj_resized, position['x'], position['y'])
+        
+        #cv2.imwrite("blended.jpg", cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
+        
+        insertion_mask = self._create_insertion_mask(bg.shape, obj_resized.shape, position)
+        return cv2.cvtColor(result, cv2.COLOR_RGB2BGR), insertion_mask
     
     def _basic_blend(self, bg, obj, x, y):
         """Базовое наложение объекта с альфа-каналом"""
         h, w = obj.shape[:2]
         bg_h, bg_w = bg.shape[:2]
         
-        # Проверка границ
-        if x < 0 or y < 0 or x + w > bg_w or y + h > bg_h:
-            raise ValueError("Объект выходит за границы фона")
+        #ar = h_ins/h
+        #h_ins = int(h_ins)
+        #w_ins = int(w * ar)
         
+        # Проверка границ
+        #if x < 0 or y < 0 or x + w > bg_w or y + h > bg_h:
+        #    raise ValueError("Объект выходит за границы фона")
+        #obj_resized = cv2.resize(obj, dsize=(w_ins, h_ins), interpolation=cv2.INTER_CUBIC)
         # Создаем маску из альфа-канала
         if obj.shape[2] == 4:
             obj_img = obj[:, :, :3]
@@ -64,7 +78,9 @@ class ObjectInserter:
             result[y:y+h, x:x+w, c] = (
                 obj_img[:, :, c] * obj_mask +
                 result[y:y+h, x:x+w, c] * (1 - obj_mask))
-                
+        #cv2.rectangle(result, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        #cv2.rectangle(result, (x, y), (x + w_ins, y + h_ins), (0, 255, 0), 2)
+        #cv2.imwrite("insert_img.jpg", result)
         return result
     
     def _enhance_integration(self, image, obj, x, y):
@@ -155,6 +171,16 @@ class ObjectInserter:
                 image[y:y+h, x:x+w, c] * (1 - shadow_mask * shadow_strength))
                 
         return image
+    
+    def _create_insertion_mask(self, bg_shape, fg_shape, position):
+        mask = np.zeros(bg_shape[:2], dtype=np.uint8)
+        fg_height, fg_width = fg_shape[:2]
+        
+        x = max(0, min(position['x'] - fg_width // 2, bg_shape[1] - fg_width))
+        y = max(0, min(position['y'] - fg_height // 2, bg_shape[0] - fg_height))
+        
+        mask[y:y+fg_height, x:x+fg_width] = 255
+        return mask
     
     def enhance_quality(self, image):
         """Улучшение качества изображения с помощью PyTorch"""

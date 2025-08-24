@@ -19,7 +19,7 @@ class ImageEnhancer:
                 torch_dtype=torch.float16 if self.device == "cuda" else torch.float32
             ).to(self.device)
             
-    def enhance_image(self, input_image, prompt="high quality, sharp details, realistic, full hd, color alignment", strength=0.3, guidance_scale=7.5):
+    def enhance_image(self, input_image, prompt="high quality, sharp details, realistic, 4k, color alignment", strength=0.3, guidance_scale=7.5):
         """
         Улучшение качества изображения с помощью Stable Diffusion
         
@@ -29,6 +29,7 @@ class ImageEnhancer:
         :param guidance_scale: уровень соответствия prompt
         :return: улучшенное изображение (numpy array)
         """
+
         self.load_model()
         
         # Конвертация в PIL Image
@@ -37,7 +38,7 @@ class ImageEnhancer:
         # Улучшение качества
         with torch.no_grad():
             result = self.pipeline(
-                prompt=prompt,
+                prompt="high quality, sharp details, realistic, 4k, color alignment",
                 image=init_image,
                 strength=strength,
                 guidance_scale=guidance_scale

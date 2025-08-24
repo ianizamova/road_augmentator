@@ -367,8 +367,8 @@ if __name__ == "__main__":
         
         # Генерация одного объекта
         result = generator.generate_and_extract_object(
-            prompt="A red bicycle isolated on white background, professional photo",
-            class_name="bicycle"
+            prompt="A dinosaur on a road in a russian city, grey houses around, some people, several cars on the road",
+            class_name="animal"
         )
         
         if result and result["segmented"]:

@@ -23,12 +23,12 @@ class ObjectExtractor:
         default_config = {
             "dataset_path": "/media/irina/ADATA HD330/data/datasets/coco",
             "annotation_file": "annotations/instances_train2017.json",
-            "output_dir": "extracted_objects",
-            "target_classes": ["bicycle", "motorcycle"],
+            "output_dir": "extracted_objects_elgi",
+            "target_classes": ["elephant", 'giraffe'],
             "image_folder": "train2017",
             "save_format": "png",
             "crop_to_bbox": True,
-            "preserve_aspect_ratio": False
+            "preserve_aspect_ratio": True
         }
         
         if config_path and os.path.exists(config_path):

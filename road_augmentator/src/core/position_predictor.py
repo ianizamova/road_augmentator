@@ -39,10 +39,14 @@ def calculate_road_positions(road_mask: np.ndarray,
     
     # Вычисляем высоты для разделения на 3 части
     total_height = max_y - min_y
-    section_height = total_height / 3
+    section_height = (total_height + 150) / 6
     
-    lower_section_y = max_y - section_height  # Нижняя треть
-    middle_section_y = max_y - 2 * section_height  # Средняя треть
+    # lower_section_y = max_y - section_height  # Нижняя треть
+    # middle_section_y = max_y - 2 * section_height  # Средняя треть
+    # upper_section_y = min_y  # Верхняя треть
+    
+    lower_section_y = max_y - 3 * section_height  # Нижняя треть
+    middle_section_y = max_y - 5 * section_height  # Средняя треть
     upper_section_y = min_y  # Верхняя треть
     
     # Находим позиции для каждой секции
@@ -104,7 +108,7 @@ def find_positions_in_section(contour_points: np.ndarray,
         # Вычисляем рекомендуемый размер объекта на основе положения
         scale_factor = calculate_scale_factor(section_type, i, num_positions)
         object_width = road_width * scale_factor
-        object_height = object_width * 0.6  # Сохранение пропорций
+        object_height = y_end - y_start #object_width * 0.6  # Сохранение пропорций
         
         positions.append({
             'x': int(x_position),
@@ -144,8 +148,8 @@ def calculate_scale_factor(section_type: str, position_index: int, total_positio
     Объекты становятся меньше по мере удаления (перспектива).
     """
     base_scales = {
-        'lower': 0.25,  # Ближние объекты - самые большие
-        'middle': 0.18,  # Средние объекты
+        'lower': 0.5,  # Ближние объекты - самые большие
+        'middle': 0.2,  # Средние объекты
         'upper': 0.12   # Дальние объекты - самые маленькие
     }
     
@@ -276,7 +280,9 @@ class ObjectPlacer:
             'bicycle': 120,
             'vase': 40,
             'horse': 300,
-            'bird': 50
+            'bird': 50,
+            'elephant': 400,
+            'giraffe':500
         }
         
     def calc_object_width_from_depth(self, depth, base_size):
@@ -306,7 +312,7 @@ class ObjectPlacer:
             return None
         
         out_list = []
-        for position in positions:   
+        for position in positions: 
             x, y = position['x'], position['y']
             
             # Шаг 2: Оцениваем глубину в точке вставки
@@ -324,8 +330,14 @@ class ObjectPlacer:
             h, w = image_np.shape[:2]
             object_width = max(30, min(object_width, w//3))
             out_list.append((x, y, object_width))
+            
+            position['x'] = min(int(x - object_width/2), image.width - object_width - 1)
+            position['y'] = min(int(y - object_width), image.height - object_width)
+            
+            position['depth'] = depth_value
+           # position['height'] = 
         
-        return out_list
+        return positions
     
     def find_contour_center(self, contour):
         """Находит геометрический центр контура через среднее X и Y"""
@@ -378,7 +390,10 @@ class ObjectPlacer:
             'person': ['sidewalk', 'floor', 'grass', 'pavement-merged'],
             'bicycle': ['road', 'sidewalk', 'path'],
             'horse': ['road', 'path', 'street', 'driving-area'],
-            'bird': ['sky']
+            'elephant': ['road', 'path', 'street', 'driving-area'],
+            'giraffe': ['road', 'path', 'street', 'driving-area'],
+            'bird': ['sky'],
+            
         }
         return label.lower() in [s.lower() for s in compatibility.get(object_type, [])]
     
