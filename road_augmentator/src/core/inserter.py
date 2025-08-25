@@ -8,7 +8,7 @@ class ObjectInserter:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-    def insert_object(self, background_path, object_path, position, depth, enhance=True):
+    def insert_object(self, background_path, object_path, positions, enhance=True):
         """
         Вставляет объект на фон с улучшением качества
         
@@ -31,11 +31,15 @@ class ObjectInserter:
         bg = cv2.cvtColor(bg, cv2.COLOR_BGR2RGB)
         
         # it is need to resize object and then use only resized one
+        obj_height_list = np.ones(len(positions)) * obj.shape[1]
+        best_position = positions[np.argmin(np.abs([p['height'] for p in positions] - obj_height_list))]
+        
+        position = best_position
         h_ins = position['height']
         ar = h_ins/obj.shape[1]
         w_ins = int(obj.shape[0] * ar)
         
-        obj_resized = cv2.resize(obj, dsize=(w_ins, h_ins), interpolation=cv2.INTER_CUBIC)
+        obj_resized =  obj #cv2.resize(obj, dsize=(w_ins, h_ins), interpolation=cv2.INTER_CUBIC)
         
         # Базовое наложение объекта
         result = self._basic_blend(bg, obj_resized, position['x'], position['y'])

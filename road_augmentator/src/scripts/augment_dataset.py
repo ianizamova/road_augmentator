@@ -40,9 +40,9 @@ def main():
     #enhancer_config = load_config(args.enhancer_config)
     
     # Инициализируем компоненты
-    placer = ObjectPlacer()
+    placer = ObjectPlacer(config_path="road_augmentator/configs/object_placer_config.json")
     inserter = ObjectInserter()
-    enhancer = ImageEnhancer()
+    enhancer = ImageEnhancer(config_path="road_augmentator/configs/enhancer_config.json")
     
     # Получаем список изображений
     background_paths = glob(os.path.join(args.backgrounds_dir, '*.jpg')) + \
@@ -67,21 +67,16 @@ def main():
             # Выбираем случайный объект и позицию
             obj_path = np.random.choice(object_paths)
             
-            position_num =  random.randint(0, 5)
-            position = positions[position_num]  # Берем случайную позицию
+            #position_num =  random.randint(0, 5)
+            #position = positions[position_num]  # Берем случайную позицию
             
             # Загружаем объект с альфа-каналом
             foreground = load_image(obj_path, with_alpha=True)
             obj_name = os.path.splitext(os.path.basename(obj_path))[0]
             
-            # # Вставляем объект
-            # blended_image, insertion_mask = inserter.insert_object(
-            #     background, foreground, position, position['depth']
-            # )
-            
             # Вставляем объект
             blended_image, insertion_mask = inserter.insert_object(
-                bg_path, obj_path, position, position['depth']
+                bg_path, obj_path, positions
             )
             
             # Сохраняем промежуточный результат
@@ -89,11 +84,37 @@ def main():
             save_image(blended_output, blended_image)
             
             # Улучшаем изображение
-            enhanced_image = enhancer.enhance_image(blended_image, insertion_mask)
+            # Простое улучшение
+            result_simple = enhancer.enhance_image(blended_image)
+
+            # Улучшение с кастомными параметрами
+            result_custom = enhancer.enhance_image(
+                blended_image,
+                prompt="professional photography, sharp details",
+                strength=0.4,
+                object_type="bicycle",
+                scene_type="road"
+            )
+
+            # Улучшение с inpainting маской
+            result_inpainting = enhancer.enhance_image(
+                blended_image,
+                mask=insertion_mask,
+                object_type="bicycle"
+            )
+
+            
+            #enhanced_image = enhancer.enhance_image(blended_image, insertion_mask)
             
             # Сохраняем финальный результат
-            enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced.png")
-            save_image(enhanced_output, enhanced_image)
+            enhanced_output_simple = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_simple.png")
+            enhanced_output_custom = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_custom.png")
+            enhanced_output_inpainting = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_inp.png")
+            # Сохранение результата
+            enhancer.save_result(result_simple, bg_path)
+            enhancer.save_result(result_custom, bg_path)
+            enhancer.save_result(result_inpainting, bg_path)
+            #save_image(enhanced_output, enhanced_image)
             
         except Exception as e:
             print(f"Error processing {bg_path}: {str(e)}")

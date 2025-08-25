@@ -1,0 +1,97 @@
+{
+    "model_settings": {
+        "model_id": "stabilityai/stable-diffusion-2-1-base",
+        "torch_dtype": "float32",
+        "local_files_only": false,
+        "safety_checker": null,
+        "requires_safety_checker": false
+    },
+    
+    "enhancement_presets": {
+        "default": {
+            "prompt": "high quality, sharp details, realistic, professional photography, 4k resolution, perfect lighting",
+            "negative_prompt": "blurry, low quality, distorted, ugly, bad anatomy, watermark, text, signature",
+            "strength": 0.3,
+            "guidance_scale": 7.5,
+            "num_inference_steps": 20,
+            "eta": 0.0
+        },
+        "strong": {
+            "prompt": "ultra realistic, 8k resolution, professional photo, sharp focus, cinematic lighting",
+            "negative_prompt": "blurry, noisy, grainy, distorted, jpeg artifacts, low resolution",
+            "strength": 0.5,
+            "guidance_scale": 8.0,
+            "num_inference_steps": 30,
+            "eta": 0.0
+        },
+        "subtle": {
+            "prompt": "slight quality improvement, natural look, maintain original details",
+            "negative_prompt": "overprocessed, artificial, cartoon, painting",
+            "strength": 0.15,
+            "guidance_scale": 6.0,
+            "num_inference_steps": 15,
+            "eta": 0.0
+        },
+        "color_correction": {
+            "prompt": "color correction, natural colors, balanced contrast, perfect exposure",
+            "negative_prompt": "oversaturated, color cast, underexposed, overexposed",
+            "strength": 0.25,
+            "guidance_scale": 7.0,
+            "num_inference_steps": 20,
+            "eta": 0.0
+        }
+    },
+    
+    "inpainting_settings": {
+        "use_inpainting": true,
+        "inpainting_model": "stabilityai/stable-diffusion-2-inpainting",
+        "mask_dilation": 15,
+        "mask_blur": 5,
+        "inpainting_strength": 0.4,
+        "inpainting_guidance_scale": 7.5
+    },
+    
+    "performance_settings": {
+        "device": "cpu",
+        "batch_size": 1,
+        "enable_attention_slicing": true,
+        "enable_xformers": true,
+        "enable_cpu_offload": false,
+        "enable_model_cpu_offload": false,
+        "enable_vae_slicing": true,
+        "enable_vae_tiling": false,
+        "use_memory_efficient_format": true
+    },
+    
+    "output_settings": {
+        "output_format": "png",
+        "output_quality": 95,
+        "save_original": true,
+        "save_enhanced": true,
+        "output_directory": "./enhanced_results",
+        "filename_pattern": "{original_name}_enhanced_{timestamp}.{format}"
+    },
+    
+    "prompt_templates": {
+        "object_specific": {
+            "car": "professional car photography, sharp details, clean vehicle, perfect lighting",
+            "person": "portrait photography, natural skin tones, sharp focus, professional lighting",
+            "animal": "wildlife photography, natural fur texture, sharp details, natural habitat"
+        },
+        "scene_specific": {
+            "road": "street photography, realistic road scene, natural lighting, sharp details",
+            "indoor": "interior photography, balanced lighting, clean details, professional shot",
+            "nature": "nature photography, vibrant colors, sharp details, natural lighting"
+        }
+    },
+    
+    "default_parameters": {
+        "preset": "default",
+        "seed": null,
+        "max_size": 1024,
+        "resize_mode": "crop_center",
+        "auto_detect_device": true,
+        "fallback_to_cpu": true,
+        "verbose": true
+    }
+}

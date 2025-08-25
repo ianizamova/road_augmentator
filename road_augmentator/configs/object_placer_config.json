@@ -1,0 +1,88 @@
+{
+    "model_settings": {
+        "segmentation_model": "facebook/maskformer-swin-large-coco",
+        "depth_model": "Intel/dpt-large",
+        "device": "cuda",
+        "cache_dir": "./models_cache"
+    },
+    
+    "reference_sizes": {
+        "car": 200,
+        "person": 80,
+        "bicycle": 120,
+        "motorcycle": 150,
+        "bus": 350,
+        "truck": 400,
+        "vase": 40,
+        "horse": 300,
+        "bird": 50,
+        "elephant": 400,
+        "giraffe": 500,
+        "dog": 70,
+        "cat": 45,
+        "traffic_light": 30,
+        "stop_sign": 25,
+        "bench": 180
+    },
+    
+    "object_surface_compatibility": {
+        "car": ["road", "parking lot", "street", "driving-area"],
+        "person": ["sidewalk", "floor", "grass", "pavement-merged", "path"],
+        "bicycle": ["road", "sidewalk", "path", "bike-lane"],
+        "motorcycle": ["road", "street", "driving-area"],
+        "vase": ["table", "shelf", "desk", "counter"],
+        "horse": ["road", "path", "street", "driving-area", "field"],
+        "elephant": ["road", "path", "street", "driving-area", "savanna"],
+        "giraffe": ["road", "path", "street", "driving-area", "savanna"],
+        "bird": ["sky", "tree", "wire"],
+        "dog": ["sidewalk", "grass", "floor", "path"],
+        "cat": ["floor", "grass", "furniture"],
+        "default": ["road", "sidewalk", "grass", "floor"]
+    },
+    
+    "road_positioning": {
+        "vertical_division_ratios": [0.33, 0.33, 0.34],
+        "section_names": ["lower", "middle", "upper"],
+        "positions_per_section": {
+            "lower": 3,
+            "middle": 2,
+            "upper": 1
+        },
+        "base_scale_factors": {
+            "lower": 0.5,
+            "middle": 0.2,
+            "upper": 0.12
+        },
+        "position_adjustment_factor": 0.05,
+        "y_tolerance": 50,
+        "min_object_width": 30,
+        "max_object_width_ratio": 0.33
+    },
+    
+    "depth_estimation": {
+        "normalize": true,
+        "depth_calibration": {
+            "very_close_threshold": 0.2,
+            "close_threshold": 0.55,
+            "very_close_scale": 0.15,
+            "close_scale": 0.4,
+            "far_scale": 1.0
+        }
+    },
+    
+    "visualization": {
+        "section_colors": {
+            "lower": [0, 0, 255],
+            "middle": [0, 165, 255],
+            "upper": [0, 255, 255]
+        },
+        "draw_contours": true,
+        "contour_color": [0, 255, 0],
+        "contour_thickness": 2,
+        "point_radius": 5,
+        "label_font_scale": 0.4,
+        "label_thickness": 1,
+        "save_visualization": true,
+        "visualization_path": "./debug_visualizations"
+    }
+}
