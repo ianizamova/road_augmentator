@@ -85,7 +85,8 @@ result, mask = inserter.insert_object(
 - **Intel/dpt-large** - оценка глубины
 
 ### Генеративные модели
-- **Stable Diffusion** - генерация и улучшение
+- **stabilityai/stable-diffusion-2-1-base** - улучшение качества изображения
+- **stabilityai/stable-diffusion-2-inpainting** - inpainting модель для добавления объектов на изображение
 
 
 - [Hugging Face Transformers](https://huggingface.co/docs/transformers)
