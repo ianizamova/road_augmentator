@@ -1,7 +1,0 @@
-{
-    "road_detection_model": "models/road_segmentation.pth",
-    "perspective_estimation": true,
-    "min_road_area": 0.3,
-    "object_scale_range": [0.1, 0.3],
-    "avoid_obstacles": true
-}

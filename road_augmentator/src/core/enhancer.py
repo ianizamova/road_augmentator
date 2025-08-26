@@ -152,7 +152,7 @@ class ImageEnhancer:
             self.inpainting_pipeline = StableDiffusionInpaintPipeline.from_pretrained(
                 inpainting_config["inpainting_model"],
                 torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-                cache_dir=self.config["model_settings"]["cache_dir"]
+                #cache_dir=self.config["model_settings"]["cache_dir"]
             ).to(self.device)
             
             self.logger.info("Inpainting model loaded successfully")
@@ -216,11 +216,12 @@ class ImageEnhancer:
         )
         
         # Конвертация в PIL Image
-        if len(input_image.shape) == 3 and input_image.shape[2] == 3:
-            # Конвертируем BGR to RGB если нужно
-            pil_image = Image.fromarray(cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB))
-        else:
-            pil_image = Image.fromarray(input_image)
+        # if len(input_image.shape) == 3 and input_image.shape[2] == 3:
+        #     # Конвертируем BGR to RGB если нужно
+        #     pil_image = Image.fromarray(cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB))
+        # else:
+        #     pil_image = Image.fromarray(input_image)
+        pil_image = Image.fromarray(input_image)
         
         # Ресайз если нужно
         max_size = self.config["default_parameters"]["max_size"]
@@ -255,8 +256,8 @@ class ImageEnhancer:
         
         # Конвертация обратно в numpy array
         enhanced_np = np.array(result)
-        if enhanced_np.shape[2] == 3:  # RGB to BGR
-            enhanced_np = cv2.cvtColor(enhanced_np, cv2.COLOR_RGB2BGR)
+        #if enhanced_np.shape[2] == 3:  # RGB to BGR
+        #    enhanced_np = cv2.cvtColor(enhanced_np, cv2.COLOR_RGB2BGR)
         
         processing_time = time.time() - start_time
         
@@ -406,14 +407,33 @@ class ImageEnhancer:
         )
         
         output_path = os.path.join(output_config["output_directory"], filename)
-        
+         # Конвертация из BGR в RGB если нужно
+        # if len(result.image.shape) == 3 and result.image.shape[2] == 3:
+        #     # Проверяем, является ли изображение BGR (обычный выход из OpenCV)
+        #     # Конвертируем BGR to RGB
+        #     image_to_save = cv2.cvtColor(result.image, cv2.COLOR_BGR2RGB)
+        # else:
+        #     # Если уже RGB или grayscale, используем как есть
+        #image_to_save = result.image
+        image_to_save = cv2.cvtColor(result.image, cv2.COLOR_BGR2RGB)
+            
         # Сохранение изображения
         if output_config["output_format"].lower() == "png":
-            cv2.imwrite(output_path, result.image, 
-                       [cv2.IMWRITE_PNG_COMPRESSION, output_config["output_quality"]])
+            pil_image = Image.fromarray(image_to_save)
+            pil_image.save(output_path, 
+                        format='PNG', 
+                        optimize=True, 
+                        quality=output_config["output_quality"])
         else:
-            cv2.imwrite(output_path, result.image, 
-                       [cv2.IMWRITE_JPEG_QUALITY, output_config["output_quality"]])
+            # Для JPEG и других форматов используем OpenCV
+            # Но сначала конвертируем обратно в BGR для OpenCV
+            #if len(image_to_save.shape) == 3 and image_to_save.shape[2] == 3:
+            #    bgr_image = cv2.cvtColor(image_to_save, cv2.COLOR_RGB2BGR)
+            #else:
+            #    bgr_image = image_to_save
+                
+            cv2.imwrite(output_path, image_to_save, 
+                    [cv2.IMWRITE_JPEG_QUALITY, output_config["output_quality"]])
         
         # Сохранение метаданных
         metadata_path = os.path.splitext(output_path)[0] + "_metadata.json"

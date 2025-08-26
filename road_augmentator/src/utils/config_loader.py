@@ -122,3 +122,60 @@ class ConfigLoader:
                 "max_size": 1024
             }
         }
+        
+    @staticmethod
+    def get_inserter_config(config_path: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Загрузка конфигурации для ObjectInserter
+        
+        Args:
+            config_path: Путь к JSON файлу конфигурации
+            
+        Returns:
+            Словарь с конфигурацией ObjectInserter
+        """
+        if config_path is None:
+            config_path = "configs/inserter_config.json"
+        
+        try:
+            config = ConfigLoader.load_json_config(config_path)
+            return config
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Warning: Could not load Inserter config from {config_path}: {e}")
+            print("Using default Inserter configuration")
+            return ConfigLoader.get_default_inserter_config()
+    
+    @staticmethod
+    def get_default_inserter_config() -> Dict[str, Any]:
+        """Возвращает дефолтную конфигурацию ObjectInserter"""
+        return {
+            "device_settings": {
+                "device": "auto",
+                "fallback_to_cpu": true
+            },
+            "blending_settings": {
+                "default_enhance": true,
+                "edge_smoothing": true,
+                "color_correction": true,
+                "shadow_effects": true
+            },
+            "edge_blending": {
+                "enabled": true,
+                "kernel_size_ratio": 0.05,
+                "min_kernel_size": 3
+            },
+            "color_correction": {
+                "enabled": true,
+                "correction_strength": 1.0
+            },
+            "shadow_effects": {
+                "enabled": true,
+                "offset_ratio_x": 0.03,
+                "offset_ratio_y": 0.03,
+                "shadow_strength": 0.6
+            },
+            "error_handling": {
+                "skip_invalid_positions": true,
+                "log_errors": true
+            }
+        }

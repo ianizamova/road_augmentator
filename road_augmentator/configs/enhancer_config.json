@@ -68,7 +68,7 @@
         "output_quality": 95,
         "save_original": true,
         "save_enhanced": true,
-        "output_directory": "./enhanced_results",
+        "output_directory": "experiment11/enhanced_rgb",
         "filename_pattern": "{original_name}_enhanced_{timestamp}.{format}"
     },
     
@@ -86,11 +86,11 @@
     },
     
     "default_parameters": {
-        "preset": "default",
+        "preset": "subtle",
         "seed": null,
         "max_size": 1024,
         "resize_mode": "crop_center",
-        "auto_detect_device": true,
+        "auto_detect_device": false,
         "fallback_to_cpu": true,
         "verbose": true
     }

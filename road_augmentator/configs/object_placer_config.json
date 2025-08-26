@@ -2,7 +2,7 @@
     "model_settings": {
         "segmentation_model": "facebook/maskformer-swin-large-coco",
         "depth_model": "Intel/dpt-large",
-        "device": "cuda",
+        "device": "cpu",
         "cache_dir": "./models_cache"
     },
     

@@ -21,9 +21,9 @@ def main():
     #parser.add_argument('--enhancer_config', type=str, default='configs/enhancer_config.yaml')
  
  
-    parser.add_argument('--backgrounds_dir', type=str, required=False, default="/media/irina/ADATA HD330/data/datasets/solesensei_bdd100k/versions/2/bdd100k/bdd100k/images/10k/val", help='Path to background images')
-    parser.add_argument('--objects_dir', type=str, required=False, default='output_riders', help='Path to foreground objects with transparency')
-    parser.add_argument('--output_dir', type=str, required=False, default='experiment1', help='Output directory')
+    parser.add_argument('--backgrounds_dir', type=str, required=False, default="/home/irina/work/otus_cv/blackswan_generator/background", help='Path to background images')
+    parser.add_argument('--objects_dir', type=str, required=False, default='/media/irina/ADATA HD330/data/datasets/horses', help='Path to foreground objects with transparency')
+    parser.add_argument('--output_dir', type=str, required=False, default='experiment13', help='Output directory')
        
     args = parser.parse_args()
     
@@ -34,14 +34,9 @@ def main():
     os.makedirs(blended_dir, exist_ok=True)
     os.makedirs(enhanced_dir, exist_ok=True)
     
-    # Загружаем конфиги
-    #placer_config = load_config(args.placer_config)
-    #inserter_config = load_config(args.inserter_config)
-    #enhancer_config = load_config(args.enhancer_config)
-    
     # Инициализируем компоненты
     placer = ObjectPlacer(config_path="road_augmentator/configs/object_placer_config.json")
-    inserter = ObjectInserter()
+    inserter = ObjectInserter(config_path="road_augmentator/configs/inserter_config.json")
     enhancer = ImageEnhancer(config_path="road_augmentator/configs/enhancer_config.json")
     
     # Получаем список изображений
@@ -59,7 +54,7 @@ def main():
             bg_name = os.path.splitext(os.path.basename(bg_path))[0]
             
             # Предсказываем позиции для фона
-            positions = placer.predict_size_and_position(bg_path, 'bicycle')
+            positions = placer.predict_size_and_position(bg_path, 'horse')
             if not positions:
                 print(f"No valid positions found for {bg_name}")
                 continue
@@ -75,8 +70,8 @@ def main():
             obj_name = os.path.splitext(os.path.basename(obj_path))[0]
             
             # Вставляем объект
-            blended_image, insertion_mask = inserter.insert_object(
-                bg_path, obj_path, positions
+            blended_image, insertion_mask, annotation_path = inserter.insert_object_with_annotation(
+                bg_path, obj_path, positions, "horse"
             )
             
             # Сохраняем промежуточный результат
@@ -86,35 +81,32 @@ def main():
             # Улучшаем изображение
             # Простое улучшение
             result_simple = enhancer.enhance_image(blended_image)
-
+            enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle.png")
+            save_image(enhanced_output, result_simple.image)
+            
+            #enhancer.save_result(result_simple, bg_path)
             # Улучшение с кастомными параметрами
             result_custom = enhancer.enhance_image(
                 blended_image,
                 prompt="professional photography, sharp details",
-                strength=0.4,
-                object_type="bicycle",
+                strength=0.5,
+                object_type="horse",
                 scene_type="road"
             )
-
+            #enhancer.save_result(result_custom, bg_path)
+            enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle_custom.png")
+            save_image(enhanced_output, result_custom.image)
+            
             # Улучшение с inpainting маской
             result_inpainting = enhancer.enhance_image(
                 blended_image,
                 mask=insertion_mask,
-                object_type="bicycle"
+                object_type="bicycle rider"
             )
-
+            #enhancer.save_result(result_inpainting, bg_path)
+            enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle_inpaint.png")
+            save_image(enhanced_output, result_inpainting.image)
             
-            #enhanced_image = enhancer.enhance_image(blended_image, insertion_mask)
-            
-            # Сохраняем финальный результат
-            enhanced_output_simple = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_simple.png")
-            enhanced_output_custom = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_custom.png")
-            enhanced_output_inpainting = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_enhanced_inp.png")
-            # Сохранение результата
-            enhancer.save_result(result_simple, bg_path)
-            enhancer.save_result(result_custom, bg_path)
-            enhancer.save_result(result_inpainting, bg_path)
-            #save_image(enhanced_output, enhanced_image)
             
         except Exception as e:
             print(f"Error processing {bg_path}: {str(e)}")

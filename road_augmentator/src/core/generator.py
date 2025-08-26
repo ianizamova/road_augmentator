@@ -1,27 +1,3 @@
-# from diffusers import StableDiffusionPipeline
-# import torch
-# from PIL import Image
-
-# # Инициализация пайплайна
-# pipe = StableDiffusionPipeline.from_pretrained(
-#     "runwayml/stable-diffusion-v1-5",
-#     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-# ).to("cuda" if torch.cuda.is_available() else "cpu")
-
-# # Генерация объекта (например, велосипеда)
-# prompt = "A bicycle isolated on white background, high detail, 4k"
-# negative_prompt = "low quality, blurry, text, watermark"
-
-# generated_image = pipe(
-#     prompt=prompt,
-#     negative_prompt=negative_prompt,
-#     width=512,
-#     height=512,
-#     num_inference_steps=30
-# ).images[0]
-
-# generated_image.save("generated_bicycle.png")
-
 import os
 import numpy as np
 from PIL import Image

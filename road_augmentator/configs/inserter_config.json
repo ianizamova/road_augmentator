@@ -1,8 +1,119 @@
 {
-    "blending_mode": "poisson",
-    "shadow_intensity": 0.4,
-    "reflection_strength": 0.2,
-    "lighting_match": true,
-    "perspective_adjustment": true,
-    "scale_variation": 0.15
+    "device_settings": {
+        "device": "auto",
+        "fallback_to_cpu": true,
+        "verbose_device_info": true
+    },
+    
+    "blending_settings": {
+        "default_enhance": true,
+        "blending_method": "alpha_composite",
+        "edge_smoothing": true,
+        "color_correction": true,
+        "shadow_effects": true,
+        "quality_enhancement": false
+    },
+    
+    "edge_blending": {
+        "enabled": true,
+        "kernel_size_ratio": 0.05,
+        "min_kernel_size": 3,
+        "gaussian_sigma": 0,
+        "kernel_always_odd": true
+    },
+    
+    "color_correction": {
+        "enabled": true,
+        "correction_strength": 1.0,
+        "channel_weights": [1.0, 1.0, 1.0],
+        "preserve_object_hue": false,
+        "adaptive_correction": true
+    },
+    
+    "shadow_effects": {
+        "enabled": false,
+        "offset_ratio_x": 0.03,
+        "offset_ratio_y": 0.03,
+        "min_offset": 1,
+        "blur_kernel_size": 21,
+        "blur_sigma": 0,
+        "shadow_strength": 0.6,
+        "shadow_color": [0, 0, 0],
+        "shadow_direction": "bottom_right"
+    },
+    
+    "position_selection": {
+        "selection_strategy": "min_height_difference",
+        "max_relative_height_diff": 0.5,
+        "prefer_larger_objects": false,
+        "consider_aspect_ratio": true
+    },
+    
+    "quality_enhancement": {
+        "enabled": false,
+        "use_pytorch_enhancement": true,
+        "normalize_mean": [0.485, 0.456, 0.406],
+        "normalize_std": [0.229, 0.224, 0.225],
+        "enhancement_strength": 1.0
+    },
+    
+    "resizing_settings": {
+        "maintain_aspect_ratio": true,
+        "interpolation_method": "cubic",
+        "resize_before_insertion": true,
+        "max_resolution": 4096,
+        "min_resolution": 32
+    },
+    
+    "error_handling": {
+        "skip_invalid_positions": true,
+        "log_errors": true,
+        "raise_exceptions": false,
+        "default_fallback": true
+    },
+    
+    "performance_settings": {
+        "batch_processing": false,
+        "memory_efficient": true,
+        "preload_models": false,
+        "cache_size": 10
+    },
+    
+    "debug_settings": {
+        "save_intermediate": false,
+        "debug_output_path": "./debug_output",
+        "log_blending_steps": false,
+        "visualize_mask": false
+    },
+
+    "annotation_settings": {
+        "enabled": true,
+        "default_format": "yolo",
+        "output_directory": "./annotations",
+        "include_confidence": true,
+        "default_confidence": 0.95,
+        "class_mapping": {
+            "car": 0,
+            "person": 1,
+            "bicycle": 2,
+            "motorcycle": 3,
+            "bus": 4,
+            "truck": 5,
+            "vase": 6,
+            "horse": 7,
+            "bird": 8,
+            "elephant": 9,
+            "giraffe": 10,
+            "dog": 11,
+            "cat": 12,
+            "traffic_light": 13,
+            "stop_sign": 14,
+            "bench": 15,
+            "unknown": 16
+        },
+        "supported_formats": ["yolo", "coco", "pascal_voc", "csv"],
+        "save_visualization": true,
+        "visualization_quality": 85,
+        "include_timestamp": true
+    }
 }
