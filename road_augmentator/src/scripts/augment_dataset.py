@@ -13,18 +13,13 @@ from src.core.enhancer import ImageEnhancer
 
 def main():
     parser = argparse.ArgumentParser(description='Object Placement and Enhancement Pipeline')
-    #parser.add_argument('--backgrounds_dir', type=str, required=True, default="/media/irina/ADATA HD330/data/datasets/solesensei_bdd100k/versions/2/bdd100k/bdd100k/images/10k/val", help='Path to background images')
-    #parser.add_argument('--objects_dir', type=str, required=True, default='output_riders', help='Path to foreground objects with transparency')
-    #parser.add_argument('--output_dir', type=str, required=True, default='experiment1', help='Output directory')
-    #parser.add_argument('--placer_config', type=str, default='configs/placer_config.yaml')
-    #parser.add_argument('--inserter_config', type=str, default='configs/inserter_config.yaml')
-    #parser.add_argument('--enhancer_config', type=str, default='configs/enhancer_config.yaml')
- 
- 
-    parser.add_argument('--backgrounds_dir', type=str, required=False, default="/home/irina/work/otus_cv/blackswan_generator/background", help='Path to background images')
-    parser.add_argument('--objects_dir', type=str, required=False, default='/media/irina/ADATA HD330/data/datasets/horses', help='Path to foreground objects with transparency')
-    parser.add_argument('--output_dir', type=str, required=False, default='experiment13', help='Output directory')
-       
+    parser.add_argument('--backgrounds_dir', type=str, required=True, default="/media/irina/ADATA HD330/data/datasets/solesensei_bdd100k/versions/2/bdd100k/bdd100k/images/10k/val", help='Path to background images')
+    parser.add_argument('--objects_dir', type=str, required=True, default='output_riders', help='Path to foreground objects with transparency')
+    parser.add_argument('--output_dir', type=str, required=True, default='experiment1', help='Output directory')
+    parser.add_argument('--placer_config', type=str, default='configs/placer_config.yaml')
+    parser.add_argument('--inserter_config', type=str, default='configs/inserter_config.yaml')
+    parser.add_argument('--enhancer_config', type=str, default='configs/enhancer_config.yaml')
+  
     args = parser.parse_args()
     
     # Создаем выходные директории
@@ -62,10 +57,7 @@ def main():
             # Выбираем случайный объект и позицию
             obj_path = np.random.choice(object_paths)
             
-            #position_num =  random.randint(0, 5)
-            #position = positions[position_num]  # Берем случайную позицию
-            
-            # Загружаем объект с альфа-каналом
+             # Загружаем объект с альфа-каналом
             foreground = load_image(obj_path, with_alpha=True)
             obj_name = os.path.splitext(os.path.basename(obj_path))[0]
             
@@ -84,7 +76,6 @@ def main():
             enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle.png")
             save_image(enhanced_output, result_simple.image)
             
-            #enhancer.save_result(result_simple, bg_path)
             # Улучшение с кастомными параметрами
             result_custom = enhancer.enhance_image(
                 blended_image,
@@ -93,7 +84,6 @@ def main():
                 object_type="horse",
                 scene_type="road"
             )
-            #enhancer.save_result(result_custom, bg_path)
             enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle_custom.png")
             save_image(enhanced_output, result_custom.image)
             
@@ -103,7 +93,6 @@ def main():
                 mask=insertion_mask,
                 object_type="bicycle rider"
             )
-            #enhancer.save_result(result_inpainting, bg_path)
             enhanced_output = os.path.join(enhanced_dir, f"{bg_name}_{obj_name}_subtle_inpaint.png")
             save_image(enhanced_output, result_inpainting.image)
             

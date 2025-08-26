@@ -50,13 +50,24 @@ road_augmentator/
 
 ## 🧪 Примеры использования
 
+### Вырезание объектов
+
+```python
+from src.object_extractor import ObjectExtractor
+
+extractor = ObjectExtractor("configs/extract_config.json")
+
+positions = placer.predict_position(background_image)
+print(f"Найдено позиций: {len(positions)}")
+```
+
 ### Только предсказание позиций
 
 ```python
 from src.position_predictor import ObjectPlacer
 from src.utils.config_loader import load_config
 
-config = load_config("configs/placer_config.yaml")
+config = load_config("configs/object_placer_config.json")
 placer = ObjectPlacer(config)
 
 positions = placer.predict_position(background_image)
@@ -76,7 +87,14 @@ result, mask = inserter.insert_object(
     depth_value
 )
 ```
+### Основной пайплайн 
 
+Основной пайплайн сейчас описан в файле scripts/augment_dataset.py
+
+```bash
+cd road_augmentator
+python3 src/scripts/augment_dataset.py --backgrounds_dir="/path/to/backgrounds" --objects_dir="/path/to/objects" --output_dir="/path/to/output"
+```
 
 ## 📊 Поддерживаемые модели
 
