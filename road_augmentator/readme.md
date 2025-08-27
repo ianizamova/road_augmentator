@@ -102,6 +102,15 @@ cd road_augmentator
 python3 src/scripts/augment_dataset.py --backgrounds_dir="/path/to/backgrounds" --objects_dir="/path/to/objects" --output_dir="/path/to/output"
 ```
 
+### Развертывание с помощью PDM
+
+ ```bash
+ pip install pdm
+ cd road_augmentator
+ pdm install
+ pdm run augment_dataset --backgrounds_dir ./data/backgrounds --objects_dir ./data/objects --output_dir ./output
+ ```
+
 ## 📊 Поддерживаемые модели
 
 ### Сегментация

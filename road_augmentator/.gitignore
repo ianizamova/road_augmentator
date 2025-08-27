@@ -1,0 +1,11 @@
+# PDM
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# Base
+.py[cod]
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
