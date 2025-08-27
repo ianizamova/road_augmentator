@@ -113,5 +113,7 @@ python3 src/scripts/augment_dataset.py --backgrounds_dir="/path/to/backgrounds" 
 - **stabilityai/stable-diffusion-2-inpainting** - inpainting модель для добавления объектов на изображение
 
 
+## Источники и литература
+
 - [Hugging Face Transformers](https://huggingface.co/docs/transformers)
 - [Stable Diffusion Documentation](https://huggingface.co/docs/diffusers/index)
