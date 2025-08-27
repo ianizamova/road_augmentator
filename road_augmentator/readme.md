@@ -17,6 +17,11 @@
 - Python 3.9+
 - GPU (рекомендуется) для работы с моделями
 
+## Датасеты
+Для работы проекта используются датасеты 
+- https://github.com/bdd100k/bdd100k - для фонов 
+- https://www.kaggle.com/datasets/awsaf49/coco-2017-dataset - для объектов
+
 
 
 ## Структура проекта
@@ -57,8 +62,9 @@ from src.object_extractor import ObjectExtractor
 
 extractor = ObjectExtractor("configs/extract_config.json")
 
-positions = placer.predict_position(background_image)
-print(f"Найдено позиций: {len(positions)}")
+if extractor.initialize():
+    # Запускаем извлечение
+    extractor.extract_objects()
 ```
 
 ### Только предсказание позиций
